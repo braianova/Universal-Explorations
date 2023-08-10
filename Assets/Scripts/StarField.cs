@@ -16,6 +16,7 @@ public class StarField : MonoBehaviour
     private readonly int starFieldScale = 400;
 
     private bool buttonReleased;
+    public float defaultFov = 60;
     
     void Start()
     {
@@ -45,6 +46,14 @@ public class StarField : MonoBehaviour
             Camera.main.transform.RotateAround(Camera.main.transform.position, Camera.main.transform.right, Input.GetAxis("Mouse Y"));
             Camera.main.transform.RotateAround(Camera.main.transform.position, Vector3.up, -Input.GetAxis("Mouse X"));
         }
+
+        if (Input.GetKeyDown(KeyCode.Mouse1)) {
+            if (Camera.main.fieldOfView > 10) {
+                Camera.main.fieldOfView -= 10;
+            } else {
+                Camera.main.fieldOfView = defaultFov;
+            }
+        } 
         
 
         return;
@@ -112,24 +121,7 @@ public class StarField : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.Mouse1)) {
-            buttonReleased = false;
-            if (Camera.main.fieldOfView >= 20) {
-                Camera.main.fieldOfView -= 1;
-            }
-            
-        }
-
-        if (Input.GetKeyUp(KeyCode.Mouse1)) {
-            buttonReleased = true;
-        }
-
-        if (buttonReleased) {
-            if (Camera.main.fieldOfView <=59) {
-                Camera.main.fieldOfView += 1;
-            }
-
-        }
+        
     }
 
     void ToggleConstellation(int index) {
