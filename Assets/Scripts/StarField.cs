@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StarField : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class StarField : MonoBehaviour
 
     private bool buttonReleased;
     public float defaultFov = 60;
+
+    private GameObject tooltipPrefab;
+    private GameObject currentTooltip;
     
     void Start()
     {
@@ -38,6 +42,13 @@ public class StarField : MonoBehaviour
             material.SetFloat("_Size", Mathf.Lerp(starSizeMin, starSizeMax, star.size));
             material.color = star.color;
             starObjects.Add(stargo);
+        }
+
+        tooltipPrefab = Resources.Load<GameObject>("TooltipPrefab");
+        if (tooltipPrefab != null)
+        {
+            currentTooltip = Instantiate(tooltipPrefab, transform);
+            currentTooltip.SetActive(false);
         }
     }
 
@@ -121,7 +132,7 @@ public class StarField : MonoBehaviour
             }
         }
 
-        
+        UpdateTooltip();
     }
 
     void ToggleConstellation(int index) {
@@ -189,6 +200,45 @@ public class StarField : MonoBehaviour
         constellationVisible.Remove(index);
     }
 
+    private void UpdateTooltip()
+    {
+        if (currentTooltip == null || !currentTooltip.activeSelf)
+            return;
 
+        // Cast a ray from the mouse position
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+
+            // Check if the hit object is a star
+            if (starObjects.Contains(hitObject))
+            {
+                // Show the tooltip
+                currentTooltip.SetActive(true);
+
+                // Set tooltip position
+                currentTooltip.transform.position = Input.mousePosition;
+
+                // Get the star's catalog number
+                int catalogNumber = starObjects.IndexOf(hitObject) + 1;
+
+                // Update tooltip content
+                Text tooltipText = currentTooltip.GetComponentInChildren<Text>();
+                tooltipText.text = $"Star: HR {catalogNumber}\nSize: {stars[catalogNumber - 1].size:F2}\nMagnitude: {stars[catalogNumber - 1].magnitude:F2}";
+            }
+            else
+            {
+                // Hide the tooltip if not hovering over a star
+                currentTooltip.SetActive(false);
+            }
+        }
+        else
+        {
+            // Hide the tooltip if not hitting anything
+            currentTooltip.SetActive(false);
+        }
+    }
 }
