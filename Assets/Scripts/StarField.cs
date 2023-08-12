@@ -10,8 +10,8 @@ public class StarField : MonoBehaviour
     [SerializeField] private float starSizeMin = 0f;
     [Range(0,100)]
     [SerializeField] private float starSizeMax = 5f;
-    private List<StarDataLoader.Star> stars;
-    private List<GameObject> starObjects;
+    public  List<StarDataLoader.Star> stars;
+    public  List<GameObject> starObjects;
     private Dictionary<int, GameObject> constellationVisible = new();
 
     private readonly int starFieldScale = 400;
@@ -227,7 +227,9 @@ public class StarField : MonoBehaviour
 
                 // Update tooltip content
                 Text tooltipText = currentTooltip.GetComponentInChildren<Text>();
-                tooltipText.text = $"Star: HR {catalogNumber}\nSize: {stars[catalogNumber - 1].size:F2}\nMagnitude: {stars[catalogNumber - 1].magnitude:F2}";
+                // Add this back in later:
+                // Size: {stars[catalogNumber - 1].size:F2}\nMagnitude: {stars[catalogNumber - 1].magnitude:F2}
+                tooltipText.text = $"Star: HR {catalogNumber}\n";
             }
             else
             {

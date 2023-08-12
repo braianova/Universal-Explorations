@@ -358,6 +358,7 @@
 "Assets/Scripts/Star Tooltip.cs"
 "Assets/Scripts/StarDataLoader.cs"
 "Assets/Scripts/StarField.cs"
+"Assets/Scripts/Test Script.cs"
 -langversion:9.0
 
 /deterministic
