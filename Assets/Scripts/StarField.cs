@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class StarField : MonoBehaviour
 {
+    private Camera mainCamera;
     [Range(0,100)]
     [SerializeField] private float starSizeMin = 0f;
     [Range(0,100)]
@@ -44,12 +45,7 @@ public class StarField : MonoBehaviour
             starObjects.Add(stargo);
         }
 
-        tooltipPrefab = Resources.Load<GameObject>("TooltipPrefab");
-        if (tooltipPrefab != null)
-        {
-            currentTooltip = Instantiate(tooltipPrefab, transform);
-            currentTooltip.SetActive(false);
-        }
+        mainCamera = Camera.main;
     }
 
     private void FixedUpdate() {
@@ -202,45 +198,47 @@ public class StarField : MonoBehaviour
 
     private void UpdateTooltip()
     {
-        if (currentTooltip == null || !currentTooltip.activeSelf)
-            return;
-
-        // Cast a ray from the mouse position
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+        
+        if (Physics.Raycast(ray, out hitInfo))
         {
-            GameObject hitObject = hit.collider.gameObject;
+            GameObject hitObject = hitInfo.collider.gameObject;
+            int starIndex = starObjects.IndexOf(hitObject);
 
-            // Check if the hit object is a star
-            if (starObjects.Contains(hitObject))
+            if (starIndex != -1)
             {
-                // Show the tooltip
-                currentTooltip.SetActive(true);
-
-                // Set tooltip position
-                currentTooltip.transform.position = Input.mousePosition;
-
-                // Get the star's catalog number
-                int catalogNumber = starObjects.IndexOf(hitObject) + 1;
-
-                // Update tooltip content
-                Text tooltipText = currentTooltip.GetComponentInChildren<Text>();
-                // Add this back in later:
-                // Size: {stars[catalogNumber - 1].size:F2}\nMagnitude: {stars[catalogNumber - 1].magnitude:F2}
-                tooltipText.text = $"Star: HR {catalogNumber}\n";
+                //Debug.Log(hitObject);
+                //Debug.Log(starIndex);
+                DisplayTooltip(starIndex);
             }
             else
             {
-                // Hide the tooltip if not hovering over a star
-                currentTooltip.SetActive(false);
+                HideTooltip();
             }
         }
         else
         {
-            // Hide the tooltip if not hitting anything
-            currentTooltip.SetActive(false);
+            HideTooltip();
         }
+    }
+
+    private void DisplayTooltip(int starIndex)
+    {
+        string starName = starObjects[starIndex].name;
+
+        //float tooltipText = $"HR {stars[starIndex].catalog_number}";
+        Debug.Log(starName);
+        //tooltipText += $"Distance: {Vector3.Distance(mainCamera.transform.position, starObjects[starIndex].transform.position):F2} units\n";
+        //tooltipText += $"Magnitude: {star.magnitude:F2}";
+
+        // You can display the tooltip text using your preferred method (UI Canvas, TextMesh, etc.).
+        // For example, using UI Text on a Canvas:
+        // tooltipTextComponent.text = tooltipText;
+    }
+
+    private void HideTooltip()
+    {
+        // Hide or clear the tooltip (e.g., set text to an empty string).
     }
 }

@@ -9,13 +9,13 @@ public class StarTooltip : MonoBehaviour
 
     private void Start()
     {
-        mainCamera = Camera.main;
-        List<GameObject> starObjects = GetComponent<StarField>().starObjects;
+        /* mainCamera = Camera.main;
+        List<GameObject> starObjects = GetComponent<StarField>().starObjects; */
     }
 
     private void Update()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        /* Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
         
         if (Physics.Raycast(ray, out hitInfo))
@@ -38,15 +38,15 @@ public class StarTooltip : MonoBehaviour
         else
         {
             HideTooltip();
-        }
+        } */
     }
 
     private void DisplayTooltip(int starIndex)
     {
-        StarDataLoader.Star star = GetComponent<StarField>().stars[starIndex];
+        //StarDataLoader.Star star = GetComponent<StarField>().stars[starIndex];
 
-        string tooltipText = $"Name: HR {star.catalog_number}\n";
-        tooltipText += $"Distance: {Vector3.Distance(mainCamera.transform.position, starObjects[starIndex].transform.position):F2} units\n";
+        //string tooltipText = $"Name: HR {star.catalog_number}\n";
+        //tooltipText += $"Distance: {Vector3.Distance(mainCamera.transform.position, starObjects[starIndex].transform.position):F2} units\n";
         //tooltipText += $"Magnitude: {star.magnitude:F2}";
 
         // You can display the tooltip text using your preferred method (UI Canvas, TextMesh, etc.).
